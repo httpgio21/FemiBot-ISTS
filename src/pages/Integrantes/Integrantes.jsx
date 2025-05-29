@@ -1,6 +1,8 @@
 import styles from './Integrantes.module.css';
 import GiovanaIntegrante from '../../assets/giovana.jpg'
 import RachelIntegrante from '../../assets/rachel.jpg'
+import BrunaIntegrante from '../../assets/bruna.jpg'
+import GabiIntegrante from '../../assets/gabi.jpg'
 import { ArrowArcLeft, ArrowCircleUpLeft } from 'phosphor-react';
 
 export default function Integrantes() {
@@ -12,12 +14,12 @@ export default function Integrantes() {
 
             <div className={styles.divIntegrantes}>
                 <div className={styles.integrantes}>
-                    <img src='https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png'></img>
+                    <img src={BrunaIntegrante}></img>
                     <h4>Bruna Oliveira</h4>
                 </div>
 
                 <div className={styles.integrantes}>
-                    <img src='https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png'></img>
+                    <img src={GabiIntegrante}></img>
                     <h4>Gabriela Duarte</h4>
                 </div>
 
