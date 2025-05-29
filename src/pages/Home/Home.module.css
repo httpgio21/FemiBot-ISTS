@@ -1,0 +1,229 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header{
+  width: 100%;
+  height: 4.5rem;
+  background-color: var(--purple-900);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.sidebar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 35rem;
+  height: 100%;
+  background: var(--purple-700);
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  
+}
+
+.sidebarContent{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.sidebarTitle{
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar p{
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  line-height: 2rem;
+}
+
+.footer{
+  position: relative;
+  width: 100%;
+  height: 4.5rem;
+  background: var(--purple-700);
+  font-size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+}
+
+.btnIntegrantes{
+  border: none;
+  background: none;
+}
+
+
+.linkIntegrantes{
+  text-decoration: none;
+  color: white;
+  background: var(--purple-500);
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;    
+  justify-content: center;
+  background: none;
+  border: none;
+  white-space: nowrap;
+
+  transition: color 0.1s;
+}
+
+.linkIntegrantes:hover{
+  color: var(--purple-900);
+}
+
+.logoCompletaPNG{
+  width: 100%;
+  height: 100%;
+  max-width: 20rem;
+  max-height: 20rem;
+  padding: 0;
+}
+
+.buttonsDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8% 0 0 30%;
+}
+
+.btnChat{
+  position: relative;
+  background: var(--white);
+  border: solid 8px var(--purple-900);
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 10px;
+  justify-content: center;
+  align-content: center;
+  z-index: 1;
+}
+
+.mainText{
+  margin: 5px;
+  font-size: 2rem;
+}
+
+.textBtn{
+  color: var(--purple-500);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.textBtn:hover{
+  color: var(--purple-900);
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+
+  }
+
+  .sidebarTitle h2 {
+  font-size: 2rem;
+  }
+
+  .sidebarContent{
+    padding: 1rem;
+  }
+
+  
+
+  .btnIntegrantes {
+    width: 100%;
+    padding: 0;
+  }
+
+  .linkIntegrantes {
+    font-size: 1.3rem;
+  }
+
+  .buttonsDiv {
+    padding: 2rem 0;
+  }
+
+  .logoCompletaPNG {
+    max-width: 12rem;
+    max-height: 12rem;
+  }
+
+  .header {
+    padding: 1rem 0;
+  }
+
+  .mainText {
+    font-size: 1.3rem;
+  }
+
+  .textBtn {
+    font-size: 1.3rem;
+  }
+}
+
+/* Media query para notebooks até 1366px */
+
+@media screen and (max-width: 1366px) {
+  .sidebar {
+    width: 25rem; /* sidebar mais estreita */
+  }
+  .sidebar p {
+    font-size: 0.85rem;
+  }
+  .buttonsDiv {
+    padding-left: 15%;
+  }
+
+  .logoCompletaPNG {
+    max-width: 16rem;
+    max-height: 16rem;
+  }
+
+  .header {
+    height: 4rem;
+    padding: 1.5rem 0;
+  }
+
+  .mainText {
+    font-size: 1.6rem;
+  }
+
+  .textBtn {
+    font-size: 1.3rem;
+  }
+
+  .sidebarTitle {
+    font-size: 1.8rem;
+  }
+
+  .linkIntegrantes {
+    font-size: 1rem; /* tamanho menor que o padrão */
+  }
+}

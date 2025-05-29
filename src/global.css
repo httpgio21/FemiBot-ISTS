@@ -1,0 +1,29 @@
+:root{
+    --white: #ffffff;
+    --black: #000000;
+    --gray-400: #8d8d99; 
+    --purple-300: #B1A4B7;
+    --purple-500: #b48aaa;
+    --purple-700: #9A7295;
+    --purple-600: #925a82;
+    --purple-900: #44283c;   
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100%;
+    width: 100%;
+    background: var(--purple-300);
+    color: var(--white);
+}
+
+body, input, textarea, button{
+    font-family: 'montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+}
