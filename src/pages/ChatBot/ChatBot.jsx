@@ -1,94 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import dadosIst from '../../../dadosIst.json';
 import { ArrowArcLeft, ArrowClockwise } from 'phosphor-react';
 import styles from './ChatBot.module.css';
-
-// Função para limpar texto: remover acentos, pontuação e deixar minúsculo
-function limparTexto(texto) {
-  return texto
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s]/gi, '');
-}
-
-function identificarTopico(pergunta) {
-  const p = limparTexto(pergunta);
-
-  if (p.match(/\b(o que e|oque e|definicao|conceito)\b/)) return 'Definicao';
-  if (p.match(/\b(sintoma|sintomas)\b/)) return 'Sintomas';
-  if (p.match(/\b(complicacao|complicacoes|problema|problemas|risco)\b/))
-    return 'Complicacoes';
-  if (p.match(/\b(tratamento|tratar|remedio|cura|medicamento)\b/))
-    return 'Tratamento';
-  if (p.match(/\b(transmissao|contagio)\b/)) return 'Transmissao';
-  if (p.match(/\b(prevencao|prevenir|evitar)\b/)) return 'Prevencao';
-
-  return null;
-}
-
-// Flag para recomendar sempre procurar médico
-const SEMPRE_RECOMENDAR_MEDICO = true;
-
-function responderPergunta(pergunta) {
-  const textoLimpo = limparTexto(pergunta);
-
-  // Verifica se é uma saudação
-  if (
-    textoLimpo.match(
-      /\b(oi|ola|olá|bom dia|boa tarde|boa noite|e ai|fala|hey|hello)\b/
-    )
-  ) {
-    return '👋 Olá! Sou o FemiBOT ISTs, um chatbot especializado em ISTs femininas. Como posso ajudar você hoje?';
-  }
-
-  let itemEncontrado = null;
-
-  for (const item of dadosIst) {
-    if (textoLimpo.includes(limparTexto(item.Nome))) {
-      itemEncontrado = item;
-      break;
-    }
-    for (const chave of item.palavrasChave) {
-      if (textoLimpo.includes(limparTexto(chave))) {
-        itemEncontrado = item;
-        break;
-      }
-    }
-    if (itemEncontrado) break;
-  }
-
-  if (!itemEncontrado) {
-    return `Desculpe, não consegui identificar sua dúvida. Por favor, mencione o nome da IST ou sintomas específicos.`;
-  }
-
-  const topico = identificarTopico(pergunta);
-
-  if (topico) {
-    const resposta = itemEncontrado[topico];
-    return resposta
-      ? `*${itemEncontrado.Nome}* - ${topico.replace('_', ' ')}:\n\n${resposta}` +
-        (SEMPRE_RECOMENDAR_MEDICO
-          ? `\n\n⚠️ **LEMBRE-SE SEMPRE DE PROCURAR UM MÉDICO PARA DIAGNÓSTICO E TRATAMENTO ADEQUADO.**`
-          : '')
-      : `Desculpe, não tenho informação sobre "${topico}" para ${itemEncontrado.Nome}.` +
-        (SEMPRE_RECOMENDAR_MEDICO
-          ? `\n\n⚠️ **LEMBRE-SE SEMPRE DE PROCURAR UM MÉDICO PARA DIAGNÓSTICO E TRATAMENTO ADEQUADO.**`
-          : '');
-  }
-
-  return (
-    `📌 *${itemEncontrado.Nome}*\n\n` +
-    `🦠 Sintomas: ${itemEncontrado.Sintomas_em_Mulheres}\n` +
-    `⚠️ Complicações: ${itemEncontrado.Complicacoes}\n` +
-    `💊 Tratamento: ${itemEncontrado.Tratamento}\n` +
-    `🔄 Transmissão: ${itemEncontrado.Transmissao}\n` +
-    `✅ Prevenção: ${itemEncontrado.Prevencao}` +
-    (SEMPRE_RECOMENDAR_MEDICO
-      ? `\n\n⚠️ **LEMBRE-SE SEMPRE DE PROCURAR UM MÉDICO PARA DIAGNÓSTICO E TRATAMENTO ADEQUADO.**`
-      : '')
-  );
-}
 
 export default function ChatBot() {
   const mensagemInicial = {
@@ -104,20 +16,42 @@ export default function ChatBot() {
   const inputRef = useRef(null);
   const containerMensagensRef = useRef(null);
 
-  const enviarMensagem = () => {
+  const enviarMensagem = async () => {
     if (!entrada.trim()) return;
 
     const mensagemUsuario = { remetente: 'usuário', texto: entrada };
     setMensagens((msgs) => [...msgs, mensagemUsuario]);
     setCarregando(true);
 
-    setTimeout(() => {
-      const respostaTexto = responderPergunta(entrada);
-      const mensagemBot = { remetente: 'bot', texto: respostaTexto };
+    try {
+      const response = await fetch('http://localhost:8000/chat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: entrada }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao acessar o serviço');
+      }
+
+      const data = await response.json();
+
+      const mensagemBot = { remetente: 'bot', texto: data.reply };
       setMensagens((msgs) => [...msgs, mensagemBot]);
+    } catch (error) {
+      const mensagemErro = {
+        remetente: 'bot',
+        texto:
+          'Desculpe, ocorreu um erro ao tentar obter a resposta. Tente novamente mais tarde.',
+      };
+      setMensagens((msgs) => [...msgs, mensagemErro]);
+      console.error(error);
+    } finally {
       setEntrada('');
       setCarregando(false);
-    }, 1000);
+    }
   };
 
   const limparChat = () => {
@@ -125,14 +59,12 @@ export default function ChatBot() {
     setEntrada('');
   };
 
-  // Foco no input sempre que mensagens atualizam e não está carregando
   useEffect(() => {
     if (!carregando && inputRef.current) {
       inputRef.current.focus();
     }
   }, [carregando, mensagens]);
 
-  // Auto-scroll para o final sempre que mensagens atualizam
   useEffect(() => {
     if (containerMensagensRef.current) {
       containerMensagensRef.current.scrollTop =

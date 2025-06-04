@@ -2,7 +2,7 @@
   {
     "Nome": "HPV",
     "Definicao": "O HPV é um vírus que causa verrugas genitais e pode levar a lesões no colo do útero, além de aumentar o risco de câncer.",
-    "Sintomas_em_Mulheres": "Verrugas genitais, lesões no colo do útero, coceira",
+    "Sintomas": "Verrugas genitais, lesões no colo do útero, coceira",
     "Complicacoes": "Câncer de colo do útero, vulva e vagina",
     "Tratamento": "Controle das lesões, monitoramento periódico",
     "Transmissao": "Contato pele com pele, sexo oral, vaginal ou anal",
@@ -18,7 +18,7 @@
   {
     "Nome": "Clamídia",
     "Definicao": "A clamídia é uma infecção bacteriana comum que pode causar corrimento vaginal e dor ao urinar, podendo levar à infertilidade se não tratada.",
-    "Sintomas_em_Mulheres": "Corrimento vaginal anormal, dor pélvica, sangramento fora do ciclo, dor ao urinar",
+    "Sintomas": "Corrimento vaginal anormal, dor pélvica, sangramento fora do ciclo, dor ao urinar",
     "Complicacoes": "Doença inflamatória pélvica, infertilidade",
     "Tratamento": "Antibiótico sob prescrição médica",
     "Transmissao": "Sexo vaginal, anal ou oral desprotegido",
@@ -34,7 +34,7 @@
   {
     "Nome": "Gonorreia",
     "Definicao": "A gonorreia é uma infecção bacteriana que causa corrimento amarelado e dor ao urinar, podendo causar infertilidade e gravidez ectópica.",
-    "Sintomas_em_Mulheres": "Corrimento amarelado, dor ao urinar, dor abdominal, sangramento entre menstruações",
+    "Sintomas": "Corrimento amarelado, dor ao urinar, dor abdominal, sangramento entre menstruações",
     "Complicacoes": "Infertilidade, gravidez ectópica",
     "Tratamento": "Antibiótico sob prescrição médica",
     "Transmissao": "Sexo vaginal, anal ou oral desprotegido",
@@ -52,7 +52,7 @@
   {
     "Nome": "Sífilis",
     "Definicao": "A sífilis é uma infecção bacteriana que pode causar feridas indolores e manchas no corpo, podendo afetar órgãos internos se não tratada.",
-    "Sintomas_em_Mulheres": "Ferida indolor, manchas no corpo, lesões internas",
+    "Sintomas": "Ferida indolor, manchas no corpo, lesões internas",
     "Complicacoes": "Comprometimento cardíaco, neurológico, fetal",
     "Tratamento": "Antibiótico injetável supervisionado por profissional",
     "Transmissao": "Contato sexual direto, da mãe para o feto",
@@ -69,7 +69,7 @@
   {
     "Nome": "Herpes Genital",
     "Definicao": "O herpes genital é uma infecção viral que provoca bolhas ou feridas dolorosas na região genital, com crises recorrentes.",
-    "Sintomas_em_Mulheres": "Bolhas ou feridas dolorosas, coceira, queimação",
+    "Sintomas": "Bolhas ou feridas dolorosas, coceira, queimação",
     "Complicacoes": "Crises recorrentes, risco de transmissão neonatal",
     "Tratamento": "Uso contínuo de antivirais para controle dos sintomas",
     "Transmissao": "Contato com feridas ativas durante o sexo",
@@ -86,7 +86,7 @@
   {
     "Nome": "Tricomoníase",
     "Definicao": "A tricomoníase é uma infecção causada por protozoário, que gera corrimento com odor forte e pode aumentar o risco de outras ISTs.",
-    "Sintomas_em_Mulheres": "Corrimento espumoso com odor forte, coceira, dor ao urinar",
+    "Sintomas": "Corrimento espumoso com odor forte, coceira, dor ao urinar",
     "Complicacoes": "Parto prematuro, maior risco de outras ISTs",
     "Tratamento": "Tratamento com antibiótico e abstinência durante o período",
     "Transmissao": "Sexo vaginal desprotegido, compartilhamento de toalhas íntimas",
@@ -102,7 +102,7 @@
   {
     "Nome": "Candidíase",
     "Definicao": "A candidíase é uma infecção fúngica que causa corrimento branco, coceira intensa e vermelhidão, decorrente do desequilíbrio da flora vaginal.",
-    "Sintomas_em_Mulheres": "Corrimento branco espesso, coceira intensa, vermelhidão",
+    "Sintomas": "Corrimento branco espesso, coceira intensa, vermelhidão",
     "Complicacoes": "Desconforto recorrente, infecções secundárias",
     "Tratamento": "Uso de antifúngicos tópicos ou orais, dependendo da gravidade",
     "Transmissao": "Desequilíbrio da flora vaginal (não é IST, mas pode ser agravada por sexo)",
@@ -118,7 +118,7 @@
   {
     "Nome": "HIV",
     "Definicao": "O HIV é um vírus que ataca o sistema imunológico, podendo levar à AIDS se não tratado, e é transmitido por fluidos corporais.",
-    "Sintomas_em_Mulheres": "Fadiga, febre, infecções recorrentes, perda de peso (quando não tratado). Muitas vezes é assintomático nas fases iniciais.",
+    "Sintomas": "Fadiga, febre, infecções recorrentes, perda de peso (quando não tratado). Muitas vezes é assintomático nas fases iniciais.",
     "Complicacoes": "Enfraquecimento progressivo do sistema imunológico, predisposição a infecções e desenvolvimento de AIDS se não tratado.",
     "Tratamento": "Terapia antirretroviral contínua e acompanhamento médico para manter a carga viral indetectável.",
     "Transmissao": "Sangue, sêmen, secreções vaginais, leite materno, compartilhamento de seringas, sexo desprotegido, da mãe para o bebê na gestação, parto ou amamentação.",
@@ -135,7 +135,7 @@
   {
     "Nome": "AIDS",
     "Definicao": "A AIDS é a fase avançada da infecção pelo HIV, com infecções oportunistas graves e comprometimento do sistema imunológico.",
-    "Sintomas_em_Mulheres": "Infecções oportunistas como pneumonia, tuberculose, candidíase oral persistente, perda acentuada de peso, febres recorrentes, diarreia crônica e lesões na pele.",
+    "Sintomas": "Infecções oportunistas como pneumonia, tuberculose, candidíase oral persistente, perda acentuada de peso, febres recorrentes, diarreia crônica e lesões na pele.",
     "Complicacoes": "Doenças oportunistas graves, cânceres relacionados, comprometimento neurológico e morte se não tratada.",
     "Tratamento": "Terapia antirretroviral contínua para controle do HIV e tratamento específico para cada doença oportunista que surgir.",
     "Transmissao": "A AIDS não é transmitida diretamente. Ela é consequência da infecção prolongada e não tratada pelo HIV.",
@@ -149,7 +149,7 @@
   {
     "Nome": "Hepatite B",
     "Definicao": "A hepatite B é uma infecção viral que afeta o fígado, podendo causar sintomas como náuseas e icterícia, e levar a cirrose se não tratada.",
-    "Sintomas_em_Mulheres": "Náuseas, dor abdominal, icterícia, urina escura",
+    "Sintomas": "Náuseas, dor abdominal, icterícia, urina escura",
     "Complicacoes": "Doença hepática crônica, cirrose",
     "Tratamento": "Antivirais, acompanhamento médico",
     "Transmissao": "Contato com sangue infectado, fluidos corporais, sexo desprotegido",
@@ -164,7 +164,7 @@
   {
     "Nome": "Hepatite C",
     "Definicao": "A hepatite C é uma infecção viral do fígado que pode evoluir para doença hepática crônica e cirrose.",
-    "Sintomas_em_Mulheres": "Cansaço, dor abdominal, icterícia (em alguns casos)",
+    "Sintomas": "Cansaço, dor abdominal, icterícia (em alguns casos)",
     "Complicacoes": "Cirrose, câncer de fígado",
     "Tratamento": "Antivirais específicos, acompanhamento médico",
     "Transmissao": "Contato com sangue contaminado, compartilhamento de seringas",

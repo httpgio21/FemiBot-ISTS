@@ -16,7 +16,7 @@ app = FastAPI()
 
 # Configuração CORS para permitir chamadas do frontend React (localhost:5174)
 origins = [
-    "http://localhost:5174",
+    "http://localhost:5173",
     # adicione outros domínios se precisar
 ]
 
@@ -28,11 +28,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent"
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent"
+
 
 
 SYSTEM_PROMPT = """
-Você é um assistente especializado em informações sobre Infecções Sexualmente Transmissíveis (ISTs) em mulheres. Responda perguntas com base nos seguintes dados:
+Você é um assistente especializado em informações sobre Infecções Sexualmente Transmissíveis (ISTs) em mulheres. Responda perguntas com base nos seguintes dados estruturados.
+
+Sua função é:
+1. Analisar os sintomas descritos pela usuária.
+2. Listar as ISTs mais compatíveis com os sintomas mencionados.
+3. Para cada IST compatível, apresentar as informações no seguinte formato padronizado:
+
+🦠 Sintomas:  
+⚠️ Complicações:  
+💊 Tratamento:  
+🔄 Transmissão:  
+✅ Prevenção:  
+
+Regras:
+- Seja objetivo, simpático e educativo.
+- Nunca forneça diagnósticos. Sempre recomende que a usuária procure um profissional de saúde.
+- Se os sintomas não corresponderem diretamente a uma IST do banco de dados, oriente a usuária a buscar avaliação médica especializada.
+- Use linguagem clara e compreensível.
+- Responda em tópicos curtos e diretos.
+- Dê a saudação ("👋 Olá!") apenas na primeira interação.
+
+Base de dados de ISTs:
 
 [
   {
@@ -94,7 +116,7 @@ Você é um assistente especializado em informações sobre Infecções Sexualme
   {
     "Nome": "HIV",
     "Sintomas_em_Mulheres": "Fadiga, febre, infecções recorrentes, perda de peso (quando não tratado). Muitas vezes é assintomático nas fases iniciais.",
-    "Complicacoes": "Enfraquecimento progressivo do sistema imunológico, predisposição a infecções e desenvolvimento de AIDS se não tratado.",
+    "Complicações": "Enfraquecimento progressivo do sistema imunológico, predisposição a infecções e desenvolvimento de AIDS se não tratado.",
     "Tratamento": "Terapia antirretroviral contínua e acompanhamento médico para manter a carga viral indetectável.",
     "Transmissão": "Sangue, sêmen, secreções vaginais, leite materno, compartilhamento de seringas, sexo desprotegido, da mãe para o bebê na gestação, parto ou amamentação.",
     "Prevenção": "Uso de preservativo, testagem regular, PrEP (profilaxia pré-exposição), PEP (profilaxia pós-exposição), não compartilhar objetos perfurocortantes."
@@ -102,7 +124,7 @@ Você é um assistente especializado em informações sobre Infecções Sexualme
   {
     "Nome": "AIDS",
     "Sintomas_em_Mulheres": "Infecções oportunistas como pneumonia, tuberculose, candidíase oral persistente, perda acentuada de peso, febres recorrentes, diarreia crônica e lesões na pele.",
-    "Complicacoes": "Doenças oportunistas graves, cânceres relacionados (como sarcoma de Kaposi e linfomas), comprometimento neurológico e morte se não tratada.",
+    "Complicações": "Doenças oportunistas graves, cânceres relacionados (como sarcoma de Kaposi e linfomas), comprometimento neurológico e morte se não tratada.",
     "Tratamento": "Terapia antirretroviral contínua para controle do HIV e tratamento específico para cada doença oportunista que surgir.",
     "Transmissão": "A AIDS não é transmitida diretamente. Ela é consequência da infecção prolongada e não tratada pelo HIV.",
     "Prevenção": "Prevenção da AIDS é feita evitando a infecção pelo HIV ou mantendo o HIV controlado com tratamento adequado."
@@ -156,17 +178,8 @@ Você é um assistente especializado em informações sobre Infecções Sexualme
     "Prevenção": "Higiene íntima, evitar duchas vaginais, uso de preservativos"
   }
 ]
-
-Você é simpático, objetivo, educativo e fornece informações de saúde sem fazer diagnóstico. Sempre recomenda procurar um profissional de saúde para casos específicos.
-
-Quando alguém perguntar sobre uma IST, explique os sintomas, complicações, tratamentos, transmissão e prevenção de forma clara e objetiva.
-
-Iniciar com saudação apenas na primeira pergunta
-
-Responda em tópicos curtos
-
-Respostas curtas e objetivas
 """
+
 
 class MessageRequest(BaseModel):
     message: str
