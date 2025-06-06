@@ -5,8 +5,7 @@ import styles from './ChatBot.module.css';
 export default function ChatBot() {
   const mensagemInicial = {
     remetente: 'bot',
-    texto:
-      '👋 Olá! Sou o FemiBOT ISTs. Me envie sua dúvida sobre ISTs femininas que eu te ajudo.',
+    texto: '👋 Olá! Sou o FemiBOT ISTs. Me envie sua dúvida sobre ISTs femininas que eu te ajudo.',
   };
 
   const [mensagens, setMensagens] = useState([mensagemInicial]);
@@ -17,9 +16,11 @@ export default function ChatBot() {
   const containerMensagensRef = useRef(null);
 
   const enviarMensagem = async () => {
-    if (!entrada.trim()) return;
+    const entradaNormalizada = entrada.trim();
 
-    const mensagemUsuario = { remetente: 'usuário', texto: entrada };
+    if (!entradaNormalizada) return;
+
+    const mensagemUsuario = { remetente: 'usuário', texto: entradaNormalizada };
     setMensagens((msgs) => [...msgs, mensagemUsuario]);
     setCarregando(true);
 
@@ -29,7 +30,7 @@ export default function ChatBot() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: entrada }),
+        body: JSON.stringify({ message: entradaNormalizada }),
       });
 
       if (!response.ok) {
@@ -37,14 +38,12 @@ export default function ChatBot() {
       }
 
       const data = await response.json();
-
       const mensagemBot = { remetente: 'bot', texto: data.reply };
       setMensagens((msgs) => [...msgs, mensagemBot]);
     } catch (error) {
       const mensagemErro = {
         remetente: 'bot',
-        texto:
-          'Desculpe, ocorreu um erro ao tentar obter a resposta. Tente novamente mais tarde.',
+        texto: 'Desculpe, ocorreu um erro ao tentar obter a resposta. Tente novamente mais tarde.',
       };
       setMensagens((msgs) => [...msgs, mensagemErro]);
       console.error(error);
@@ -67,8 +66,7 @@ export default function ChatBot() {
 
   useEffect(() => {
     if (containerMensagensRef.current) {
-      containerMensagensRef.current.scrollTop =
-        containerMensagensRef.current.scrollHeight;
+      containerMensagensRef.current.scrollTop = containerMensagensRef.current.scrollHeight;
     }
   }, [mensagens, carregando]);
 
@@ -82,11 +80,7 @@ export default function ChatBot() {
   return (
     <div>
       <div className={styles.header}>
-        <a
-          href="/"
-          className={styles.btnvoltar}
-          aria-label="Voltar para a página inicial"
-        >
+        <a href="/" className={styles.btnvoltar} aria-label="Voltar para a página inicial">
           <ArrowArcLeft size={30} />
         </a>
 
@@ -106,7 +100,7 @@ export default function ChatBot() {
             color: '#333',
           }}
         >
-          <ArrowClockwise size={28} />
+          <ArrowClockwise color="white" size={28} />
         </button>
       </div>
 
@@ -115,11 +109,7 @@ export default function ChatBot() {
           {mensagens.map((msg, i) => (
             <div
               key={i}
-              className={
-                msg.remetente === 'bot'
-                  ? styles.mensagemBot
-                  : styles.mensagemUser
-              }
+              className={msg.remetente === 'bot' ? styles.mensagemBot : styles.mensagemUser}
             >
               <p style={{ whiteSpace: 'pre-line' }}>{msg.texto}</p>
             </div>

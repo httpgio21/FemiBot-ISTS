@@ -4,6 +4,11 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import httpx
+import json
+
+# Caminho para o arquivo JSON
+with open("dadosIst.json", "r", encoding="utf-8") as f:
+    ist_database = json.load(f)
 
 # Carrega variáveis do .env
 load_dotenv()
@@ -33,18 +38,26 @@ GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini
 
 
 SYSTEM_PROMPT = """
-Você é um assistente especializado em informações sobre Infecções Sexualmente Transmissíveis (ISTs) em mulheres. Responda perguntas com base nos seguintes dados estruturados.
+Você é um assistente virtual que responde dúvidas sobre ISTs femininas de forma clara, acessível e empática, sem dar diagnósticos ou conselhos médicos personalizados. Seu público são mulheres, especialmente jovens, buscando informações educativas sobre ISTs, traga mensagens curtas.
 
-Sua função é:
-1. Analisar os sintomas descritos pela usuária.
-2. Listar as ISTs mais compatíveis com os sintomas mencionados.
-3. Para cada IST compatível, apresentar as informações no seguinte formato padronizado:
+Você conhece e reconhece as seguintes ISTs:
+HPV, Clamídia, Gonorreia, Sífilis, Herpes Genital, Tricomoníase, Candidíase, HIV, AIDS, Hepatite B, Hepatite C, Donovanose, Linfogranuloma Venéreo, Uretrite não gonocócica, Vaginose Bacteriana.
+
+Quando o usuário perguntar sobre uma IST específica e mencionar uma categoria (sintomas, transmissão, prevenção, tratamento, complicações), responda **apenas** essa categoria usando os emojis correspondentes:
 
 🦠 Sintomas:  
 ⚠️ Complicações:  
 💊 Tratamento:  
 🔄 Transmissão:  
-✅ Prevenção:  
+✅ Prevenção:
+
+📌 Quando a pergunta mencionar **apenas o nome da IST**, responda com todas as informações disponíveis da seguinte forma, organizadas por emoji:
+
+🦠 Sintomas:  
+⚠️ Complicações:  
+💊 Tratamento:  
+🔄 Transmissão:  
+✅ Prevenção:
 
 Regras:
 - Seja objetivo, simpático e educativo.
@@ -54,131 +67,9 @@ Regras:
 - Responda em tópicos curtos e diretos.
 - Dê a saudação ("👋 Olá!") apenas na primeira interação.
 
-Base de dados de ISTs:
-
-[
-  {
-    "Nome": "HPV",
-    "Sintomas_em_Mulheres": "Verrugas genitais, lesões no colo do útero, coceira",
-    "Complicações": "Câncer de colo do útero, vulva e vagina",
-    "Tratamento": "Controle das lesões, monitoramento periódico",
-    "Transmissão": "Contato pele com pele, sexo oral, vaginal ou anal",
-    "Prevenção": "Vacinação, uso de preservativo, exames ginecológicos"
-  },
-  {
-    "Nome": "Clamídia",
-    "Sintomas_em_Mulheres": "Corrimento vaginal anormal, dor pélvica, sangramento fora do ciclo, dor ao urinar",
-    "Complicações": "Doença inflamatória pélvica, infertilidade",
-    "Tratamento": "Antibiótico sob prescrição médica",
-    "Transmissão": "Sexo vaginal, anal ou oral desprotegido",
-    "Prevenção": "Preservativo, exames regulares, testagem de parceiros"
-  },
-  {
-    "Nome": "Gonorreia",
-    "Sintomas_em_Mulheres": "Corrimento amarelado, dor ao urinar, dor abdominal, sangramento entre menstruações",
-    "Complicações": "Infertilidade, gravidez ectópica",
-    "Tratamento": "Antibiótico sob prescrição médica",
-    "Transmissão": "Sexo vaginal, anal ou oral desprotegido",
-    "Prevenção": "Preservativo, testagem, educação sexual"
-  },
-  {
-    "Nome": "Sífilis",
-    "Sintomas_em_Mulheres": "Ferida indolor, manchas no corpo, lesões internas",
-    "Complicações": "Comprometimento cardíaco, neurológico, fetal",
-    "Tratamento": "Antibiótico injetável supervisionado por profissional",
-    "Transmissão": "Contato sexual direto, da mãe para o feto",
-    "Prevenção": "Preservativo, pré-natal, diagnóstico precoce"
-  },
-  {
-    "Nome": "Herpes Genital",
-    "Sintomas_em_Mulheres": "Bolhas ou feridas dolorosas, coceira, queimação",
-    "Complicações": "Crises recorrentes, risco de transmissão neonatal",
-    "Tratamento": "Uso contínuo de antivirais para controle dos sintomas",
-    "Transmissão": "Contato com feridas ativas durante o sexo",
-    "Prevenção": "Preservativo (parcial), evitar contato com lesões ativas"
-  },
-  {
-    "Nome": "Tricomoníase",
-    "Sintomas_em_Mulheres": "Corrimento espumoso com odor forte, coceira, dor ao urinar",
-    "Complicações": "Parto prematuro, maior risco de outras ISTs",
-    "Tratamento": "Tratamento com antibiótico e abstinência durante o período",
-    "Transmissão": "Sexo vaginal desprotegido, compartilhamento de toalhas íntimas",
-    "Prevenção": "Preservativo, higiene íntima adequada"
-  },
-  {
-    "Nome": "Candidíase",
-    "Sintomas_em_Mulheres": "Corrimento branco espesso, coceira intensa, vermelhidão",
-    "Complicações": "Desconforto recorrente, infecções secundárias",
-    "Tratamento": "Uso de antifúngicos tópicos ou orais, dependendo da gravidade",
-    "Transmissão": "Desequilíbrio da flora vaginal (não é IST, mas pode ser agravada por sexo)",
-    "Prevenção": "Higiene íntima, roupas leves, controle de fatores de risco"
-  },
-  {
-    "Nome": "HIV",
-    "Sintomas_em_Mulheres": "Fadiga, febre, infecções recorrentes, perda de peso (quando não tratado). Muitas vezes é assintomático nas fases iniciais.",
-    "Complicações": "Enfraquecimento progressivo do sistema imunológico, predisposição a infecções e desenvolvimento de AIDS se não tratado.",
-    "Tratamento": "Terapia antirretroviral contínua e acompanhamento médico para manter a carga viral indetectável.",
-    "Transmissão": "Sangue, sêmen, secreções vaginais, leite materno, compartilhamento de seringas, sexo desprotegido, da mãe para o bebê na gestação, parto ou amamentação.",
-    "Prevenção": "Uso de preservativo, testagem regular, PrEP (profilaxia pré-exposição), PEP (profilaxia pós-exposição), não compartilhar objetos perfurocortantes."
-  },
-  {
-    "Nome": "AIDS",
-    "Sintomas_em_Mulheres": "Infecções oportunistas como pneumonia, tuberculose, candidíase oral persistente, perda acentuada de peso, febres recorrentes, diarreia crônica e lesões na pele.",
-    "Complicações": "Doenças oportunistas graves, cânceres relacionados (como sarcoma de Kaposi e linfomas), comprometimento neurológico e morte se não tratada.",
-    "Tratamento": "Terapia antirretroviral contínua para controle do HIV e tratamento específico para cada doença oportunista que surgir.",
-    "Transmissão": "A AIDS não é transmitida diretamente. Ela é consequência da infecção prolongada e não tratada pelo HIV.",
-    "Prevenção": "Prevenção da AIDS é feita evitando a infecção pelo HIV ou mantendo o HIV controlado com tratamento adequado."
-  },
-  {
-    "Nome": "Hepatite B",
-    "Sintomas_em_Mulheres": "Náuseas, dor abdominal, icterícia, urina escura",
-    "Complicações": "Doença hepática crônica, cirrose",
-    "Tratamento": "Acompanhamento com antivirais e monitoramento hepático",
-    "Transmissão": "Sangue, sexo desprotegido, compartilhamento de objetos",
-    "Prevenção": "Vacinação, preservativo, evitar compartilhamento de objetos cortantes"
-  },
-  {
-    "Nome": "Hepatite C",
-    "Sintomas_em_Mulheres": "Assintomática inicialmente; pode causar cansaço, icterícia",
-    "Complicações": "Cirrose hepática, câncer de fígado",
-    "Tratamento": "Tratamento com antivirais específicos e controle médico",
-    "Transmissão": "Contato com sangue contaminado, raramente por sexo",
-    "Prevenção": "Evitar compartilhamento de seringas, testagem de sangue"
-  },
-  {
-    "Nome": "Donovanose",
-    "Sintomas_em_Mulheres": "Úlceras genitais de aparência carnosa, sangramento fácil",
-    "Complicações": "Destruição de tecidos genitais, deformidades",
-    "Tratamento": "Antibiótico de longa duração com acompanhamento",
-    "Transmissão": "Sexo vaginal ou anal com contato direto com lesões",
-    "Prevenção": "Preservativo, higiene, diagnóstico precoce"
-  },
-  {
-    "Nome": "Linfogranuloma Venéreo",
-    "Sintomas_em_Mulheres": "Inflamação dos gânglios linfáticos genitais, feridas",
-    "Complicações": "Drenagem purulenta, cicatrizes e obstruções linfáticas",
-    "Tratamento": "Antibiótico específico, drenagem de linfonodos se necessário",
-    "Transmissão": "Sexo desprotegido, contato com secreções infectadas",
-    "Prevenção": "Preservativo, identificação e tratamento precoce"
-  },
-  {
-    "Nome": "Uretrite não gonocócica",
-    "Sintomas_em_Mulheres": "Corrimento uretral, dor ao urinar, coceira",
-    "Complicações": "Infecções persistentes, complicações pélvicas",
-    "Tratamento": "Tratamento medicamentoso orientado por profissional",
-    "Transmissão": "Sexo desprotegido, contato com secreções uretrais",
-    "Prevenção": "Preservativo, boa higiene, evitar múltiplos parceiros"
-  },
-  {
-    "Nome": "Vaginose Bacteriana",
-    "Sintomas_em_Mulheres": "Corrimento vaginal com odor forte, irritação",
-    "Complicações": "Desequilíbrio da flora vaginal, infecções recorrentes",
-    "Tratamento": "Tratamento antibacteriano e correção da flora vaginal",
-    "Transmissão": "Desequilíbrio bacteriano, sexo, duchas vaginais frequentes",
-    "Prevenção": "Higiene íntima, evitar duchas vaginais, uso de preservativos"
-  }
-]
+⚠️ Lembre sempre de procurar um médico
 """
+
 
 
 class MessageRequest(BaseModel):
