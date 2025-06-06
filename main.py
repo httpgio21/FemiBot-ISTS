@@ -5,12 +5,13 @@ from dotenv import load_dotenv
 import os
 import httpx
 import json
+from rapidfuzz import process
 
-# Caminho para o arquivo JSON
+# Carregar banco de dados IST (se quiser usar futuramente)
 with open("dadosIst.json", "r", encoding="utf-8") as f:
     ist_database = json.load(f)
 
-# Carrega variáveis do .env
+# Carregar variáveis do .env
 load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -19,23 +20,20 @@ if not API_KEY:
 
 app = FastAPI()
 
-# Configuração CORS para permitir chamadas do frontend React (localhost:5174)
+# Configuração CORS para seu frontend React
 origins = [
     "http://localhost:5173",
-    # adicione outros domínios se precisar
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # domínios permitidos
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent"
-
-
 
 SYSTEM_PROMPT = """
 Você é um assistente virtual que responde dúvidas sobre ISTs femininas de forma clara, acessível e empática, sem dar diagnósticos ou conselhos médicos personalizados. Seu público são mulheres, especialmente jovens, buscando informações educativas sobre ISTs, traga mensagens curtas.
@@ -70,13 +68,33 @@ Regras:
 ⚠️ Lembre sempre de procurar um médico
 """
 
+# Lista oficial das ISTs reconhecidas para fuzzy matching
+ist_list = [
+    "HPV", "Clamídia", "Gonorreia", "Sífilis", "Herpes Genital",
+    "Tricomoníase", "Candidíase", "HIV", "AIDS", "Hepatite B",
+    "Hepatite C", "Donovanose", "Linfogranuloma Venéreo",
+    "Uretrite não gonocócica", "Vaginose Bacteriana"
+]
 
+FUZZY_SCORE_THRESHOLD = 70
 
 class MessageRequest(BaseModel):
     message: str
 
 @app.post("/chat/")
 async def chat(request: MessageRequest):
+    user_message = request.message
+
+    # Fuzzy matching para identificar IST no texto do usuário
+    match = process.extractOne(user_message, ist_list, score_cutoff=FUZZY_SCORE_THRESHOLD)
+
+    if match:
+        ist_encontrada = match[0]
+        prompt_extra = f"\n\nNota: O usuário está perguntando sobre a IST '{ist_encontrada}'. Por favor, responda focando nela conforme as regras do sistema."
+        prompt_final = SYSTEM_PROMPT + prompt_extra
+    else:
+        prompt_final = SYSTEM_PROMPT
+
     params = {
         "key": API_KEY
     }
@@ -85,15 +103,18 @@ async def chat(request: MessageRequest):
         "contents": [
             {
                 "parts": [
-                    {"text": SYSTEM_PROMPT},       # prompt fixo
-                    {"text": request.message}      # mensagem do usuário
+                    {"text": prompt_final},
+                    {"text": user_message}
                 ]
             }
         ]
     }
 
-    async with httpx.AsyncClient() as client:
-        response = await client.post(GEMINI_API_URL, params=params, json=json_data)
+    try:
+        async with httpx.AsyncClient(timeout=20) as client:
+            response = await client.post(GEMINI_API_URL, params=params, json=json_data)
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=503, detail="Erro ao conectar com a API Gemini. Tente novamente mais tarde.")
 
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=response.text)
